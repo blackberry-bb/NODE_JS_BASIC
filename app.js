@@ -9,7 +9,7 @@ app.locals.pretty = true;
 app.use(express.static('public'));
 
 // post, body를 사용하기 위해 지정
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // 뷰엔진 jade로 지정
 app.set('view engine', 'jade');
@@ -70,7 +70,7 @@ app.get('/dynamic', function(req, res){
 });
 
 app.get('/route', function(req, res){
-    res.send('Hello Router, <img src="/route.jpg">')
+    res.send('Hello Router, <img src="/route.jpg">');
 });
 
 app.get('/login', function(req, res){
@@ -105,13 +105,13 @@ app.get('/topic/:id', function(req, res){
     <a href="/topic?id=1">Nodejs</a><br>
     <a href="/topic?id=2">Express</a><br><br>
     ${topics[req.params.id]}
-    `
+    `;
     res.send(output);
 });
 
 // URL을 이용한 정보의 전달-3
 app.get('/topic/:id/:mode', function(req, res){
-    res.send(req.params.id+','+req.params.mode)
+    res.send(req.params.id+','+req.params.mode);
 });
 
 app.listen(3000, function(){
