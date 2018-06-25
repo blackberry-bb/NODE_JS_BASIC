@@ -70,7 +70,7 @@ app.get('/dynamic', function(req, res){
 });
 
 app.get('/route', function(req, res){
-    res.send('Hello Router, <img src="/route.png">')
+    res.send('Hello Router, <img src="/route.jpg">')
 });
 
 app.get('/login', function(req, res){
