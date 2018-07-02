@@ -6,10 +6,11 @@ var bodyParser = require('body-parser');
 // 업로드하기 위해 multer 지정
 var multer = require('multer');
 
+// 기본적으로 multer은 이름 충돌을 피하기 위해 파일이름을 변경한다.
 // multer 함수에 옵션을 지정.
-var upload = multer({ dest: 'uploads/'});
+//var upload = multer({ dest: 'uploads/'});
 
-// 
+// multer 옵션으로 uploads 폴더에 파일명 그대로 저장하기 위해 설정.
 var _storage = multer.diskStorage({
     destination: function(req, file, cb){
         
