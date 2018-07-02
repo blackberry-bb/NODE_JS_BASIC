@@ -2,11 +2,38 @@ var express = require('express');
 
 // post, body를 사용하기 위해 지정
 var bodyParser = require('body-parser');
+
+// 업로드하기 위해 multer 지정
+var multer = require('multer');
+
+// multer 함수에 옵션을 지정.
+var upload = multer({ dest: 'uploads/'});
+
+// 
+var _storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        
+        //if(파일의 형식이 이미지면){
+        //    cb(null, 'uploads/images');
+        //} else if(파일의 형식이 텍스트이면){
+        //    cb(null, 'uploads/texts');
+        //}
+        cb(null, 'uploads/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
+});
+var upload = multer({ storage: _storage});
+
 var app = express();
 app.locals.pretty = true;
 
 // 정적인 파일 경로 지정
 app.use(express.static('public'));
+
+// uploads 경로로 들어왔을 때 이미지파일 경로지정
+app.use('/uploads', express.static('uploads'));
 
 // post, body를 사용하기 위해 지정
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -16,6 +43,18 @@ app.set('view engine', 'jade');
 
 // 뷰 파일 경로 지정
 app.set('views', './views');
+
+// 파일 업로드 GET 페이지
+app.get('/upload', function(req, res){
+    res.render('upload');
+});
+
+// 파일 업로드 POST
+// upload.single('userfile') -> req변수에 file을 추가하기 위함.
+app.post('/upload', upload.single('userfile'), function(req, res){
+    console.log(req.file);
+    res.send('Uploaded: '+req.file.originalname);
+});
 
 app.get('/form', function(req, res){
     res.render('form');
