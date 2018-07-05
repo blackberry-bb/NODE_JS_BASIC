@@ -3,7 +3,7 @@ var express = require('express');
 // post, body를 사용하기 위해 지정
 var bodyParser = require('body-parser');
 
-// 업로드하기 위해 multer 지정
+// 업로드하기 위해 multer 지정  
 var multer = require('multer');
 
 // 기본적으로 multer은 이름 충돌을 피하기 위해 파일이름을 변경한다.
