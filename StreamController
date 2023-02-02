@@ -1,0 +1,170 @@
+package com.hello.normal.hellonormal.education.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+@RestController
+public class StreamController {
+
+    @GetMapping("/create")
+    public String CreateStream() {
+        // 생성1 List to Stream 예제
+        ArrayList<Integer> list = new ArrayList<Integer>();
+
+        list.add(4);
+        list.add(2);
+        list.add(3);
+        list.add(1);
+
+        // 컬렉션에서 스트림 생성
+        Stream<Integer> stream1 = list.stream();
+        // forEach() 메소드를 이용한 스트림 요소의 순차 접근
+        stream1.forEach(System.out::println);
+
+        /*
+        ------------------------------------------------------------------------------------------------------
+         */
+
+        // 생성 2 Stream.of() 예제
+        // 가변 매개변수에서 스트림 생성
+        Stream<Double> stream2 = Stream.of(4.2, 2.5, 3.1, 1.9);
+        stream2.forEach(System.out::println);
+
+         /*
+        ------------------------------------------------------------------------------------------------------
+         */
+        // 스트림을 리스트로 변환
+        Stream<String> stream3 = Stream.of("a", "b", "c");
+        List<String> arrayList = stream3.toList();
+
+        return "stream";
+    }
+
+    @GetMapping("/operation")
+    public String OperationStream() {
+        /*
+        ------------------------------------------------------------------------------------------------------
+        // filter -> 해당 스트림에서 주어진 조건에 맞는 요소만으로 구성된 새로운 스트림을 반환
+        // map -> 해당 스트림의 요소들을 주어진 함수에 인수로 전달하여, 그 반환값으로 이루어진 새로운 스트림을 반환
+        ------------------------------------------------------------------------------------------------------
+         */
+        final List<Integer> list1 = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        System.out.println(
+                list1.stream()
+                        .filter(i -> i<6)
+                        .filter(i -> i%2==0)
+                        .map(i -> i*10)
+                        .collect(Collectors.toList())
+        );
+
+         /*
+        ------------------------------------------------------------------------------------------------------
+        filter 사용 -> 말그대로 조건에 맞춰 필터링하여 컬렉션을 만들어내는 방식.
+        ------------------------------------------------------------------------------------------------------
+         */
+        List<String> list2 = new ArrayList<>();
+        list2.add("aa");
+        list2.add("ab");
+        list2.add("bb");
+        Stream<String> streamFilter = list2.stream().filter(s -> s.contains("a"));
+        //streamFilter.forEach(System.out::println);
+        System.out.println(streamFilter.collect(Collectors.toList()));
+
+        // 예제1) 짝수가져오기
+        List<Integer> intList1 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
+        Stream<Integer> filterResult1 = intList1.stream().filter(item -> item % 2 == 0);
+        filterResult1.forEach(System.out::println);
+
+        // 예제2) 문자열의 첫문자가 A / 마지막 문자가 Z / 문자열 길이가 3이상
+        String[] strArray = {"ABC", "BAZ", "AZ", "ABCZ", "CC"};
+        List<String> strList = new ArrayList<>(Arrays.asList(strArray));
+        Stream<String> filterResult2 =
+                strList.stream().filter((item) -> {
+                    return item.startsWith("A") && item.endsWith("Z") && item.length() >= 3;
+                });
+        filterResult2.forEach(System.out::println);
+
+        // 예제3) filter 메서드 반환 결과를 List로 변환
+        List<Integer> intList2 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
+        List<Integer> intStreamToList1 = intList2.stream().filter(item -> item % 2 == 0).toList();
+        intStreamToList1.forEach(System.out::println);
+
+        // 예제4) filter 메서드와 map 메서드 호출
+        List<Integer> intList3 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
+        List<Integer> intStreamToList2 = intList3.stream().filter(item -> item % 2 == 0).map(item -> item * 10).collect(Collectors.toList());
+        intStreamToList2.forEach(System.out::println);
+
+         /*
+        ------------------------------------------------------------------------------------------------------
+        map 사용 -> 기존에 Stream에 있던 데이터를 변경하여 새로운 Stream을 만들어내는 연산 방식
+        ------------------------------------------------------------------------------------------------------
+         */
+        List<Integer> numList = new ArrayList<>();
+        numList.add(1);
+        numList.add(2);
+        numList.add(3);
+        Stream<Integer> streamMap = numList.stream().map(n -> n*3);
+        //streamMap.forEach(System.out::println);
+        System.out.println(streamMap.collect(Collectors.toList()));
+
+         /*
+        ------------------------------------------------------------------------------------------------------
+        정렬 기능 -> Stream에 있는 요소는 sorted 함수를 통해 정렬이 가능
+        ------------------------------------------------------------------------------------------------------
+         */
+        List<Integer> notSortedList = Arrays.asList(3,5,2,4,1,7);
+        // 오름차순 정렬
+        Stream<Integer> streamAsc = notSortedList.stream().sorted();
+        System.out.println(streamAsc.collect(Collectors.toList()));
+        // 내림차순 정렬
+        Stream<Integer> streamDesc = notSortedList.stream().sorted(Comparator.reverseOrder());
+        System.out.println(streamDesc.collect(Collectors.toList()));
+
+        return "stream";
+    }
+
+    @GetMapping("/collect")
+    public String CollectStream() {
+
+        /*
+        ------------------------------------------------------------------------------------------------------
+         요소의 출력
+         ------------------------------------------------------------------------------------------------------
+         */
+        Stream<String> stream1 = Stream.of("넷", "둘", "셋", "하나");
+        stream1.forEach(System.out::println);
+
+        /*
+        ------------------------------------------------------------------------------------------------------
+         anymatch() -> 해당 스트림의 일부 요소가 특정조건을 만족할 경우 true 반환함.
+         allmatch() -> 해당 스트림의 모든요소가 특정조건을 만족할 경우 true 반환함.
+         ------------------------------------------------------------------------------------------------------
+         */
+        IntStream stream2 = IntStream.of(30, 90, 70, 10);
+        IntStream stream3 = IntStream.of(30, 90, 70, 10);
+        System.out.println(stream2.anyMatch(n -> n > 80));
+        System.out.println(stream3.allMatch(n -> n > 80));
+
+        /*
+        ------------------------------------------------------------------------------------------------------
+        스트림을 배열이나 컬렉션으로 변환 : toArray(), toCollection(), toList(), toSet(), toMap()
+        요소의 통계와 연산 메소드와 같은 동작을 수행 : counting(), maxBy(), minBy(), summingInt(), averagingInt() 등
+        요소의 소모와 같은 동작을 수행 : reducing(), joining()
+        요소의 그룹화와 분할 : groupingBy(), partitioningBy()
+        ------------------------------------------------------------------------------------------------------
+         */
+        Stream<String> stream4 = Stream.of("넷", "둘", "하나", "셋");
+        List<String> list = stream4.toList();
+        Iterator<String> iter = list.iterator();
+
+        while(iter.hasNext()) {
+            System.out.print(iter.next() + " ");
+        }
+        return "collect";
+    }
+}
